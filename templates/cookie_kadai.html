@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<title>課題：Cookie</title>
+</head>
+<body>
+<h1>ここにcookieの課題を表示</h1>
+{% if user_count %}
+<p>{{ user_count}}</p>
+{% endif %}
+
+{% if user_date_time %}
+<p>{{ user_date_time }}</p>
+{% endif %}
+
+{% if user_last_time %}
+<p>{{ user_last_time }}</p>
+{% endif %}
+</body>
+</html>
