@@ -28,7 +28,7 @@ def sample_cookie():
 
 
 # 20章課題 cookie
-@app.route("/cookie_kadai")
+@app.route("/cookie_kadai", methods=["GET", "POST"])
 def cookie_kadai():
     # count = request.cookies.get('count')
     # if count is None:
@@ -49,6 +49,7 @@ def cookie_kadai():
     user_last_time = ""
     cookie = ""
     dic = ""
+    bb = ""
     # response = ""
 
 
@@ -57,7 +58,10 @@ def cookie_kadai():
     count = request.cookies.get('user_count')
     user_last_time = request.cookies.get('last_time')
 
-
+    # if "cookie_delete" in request.form.keys():
+    #     # cookie_delete = request.form["cookie_delete"]
+    #     response.delete_cookie('user_count')
+    #     response.delete_cookie('last_time')
 
 
     # if dic == None:
@@ -74,14 +78,25 @@ def cookie_kadai():
     date_now = datetime.datetime.now()
     # date_now = date.strftime('%Y年%m月 %H:%M:%S')
 
-    if count is None:
+    if count == 'None':
+    # if count is None:
         count = 1
     else:
         count = int(count) + 1
 
+    user_date_time = "ここに現在時刻を表示する：{}".format(date_now)
+
+    if "cookie_delete" in request.form.keys():
+        count = "None"
+        # ここでゼロにしている
+        date_now = "None"
+        user_last_time = "前回訪れた時間をここに表示する：" + str(date_now)
+    else:
+        # user_last_time = "前回訪れた時間をここに表示する：" + str(date_now)
+        bb = ""
 
     user_count = "これで訪問数を表示できる？{}回目".format(count)
-    user_date_time = "ここに現在時刻を表示する：{}".format(date_now)
+    # user_date_time = "ここに現在時刻を表示する：{}".format(date_now)
 
     if user_last_time != "":
         response = make_response(render_template('cookie_kadai.html', user_count=user_count, user_date_time=user_date_time, user_last_time=user_last_time))
@@ -90,15 +105,31 @@ def cookie_kadai():
     else:
         response = make_response(render_template('cookie_kadai.html', user_count=user_count, user_date_time=user_date_time))
 
+    user_last_time = "前回訪れた時間をここに表示する：" + str(date_now)
+
+    # response作成の順序的にこっちの方が良いんじゃない？
+    # if "cookie_delete" in request.form.keys():
+
+        # cookie_delete = request.form["cookie_delete"]
+        # response.delete_cookie('user_count')
+        # response.delete_cookie('last_time')
+
+        # ここで変数をNoneにしてしまう、そしたら次のCookieを渡すときに変数の中身がない状態だから、リセットにすることができるんじゃね？
+        # count = "None"
+        # user_last_time = "None"
+
+    # ここにuser_count作ればうまくcount変数を変化させた状態にできるんちゃう？
+    # user_count = "これで訪問数を表示できる？{}回目".format(count)
 
 
     # response_count = make_response(render_template('cookie_kadai.html', user_count=user_count, user_date_time=user_date_time))
 
     # 前回訪れた時間を保存しておく
-    user_last_time = "前回訪れた時間" + str(date_now)
+    # user_last_time = "前回訪れた時間" + str(date_now)
 
     # user_dic = {'user_count': str(count), 'last_time': user_last_time}
     # response_count.set_cookie('cookies_value', value=user_dic)
+    # response.set_cookie('user_count', count)
     response.set_cookie('user_count', str(count))
     response.set_cookie('last_time', user_last_time)
 
