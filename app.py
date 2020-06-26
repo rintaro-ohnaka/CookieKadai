@@ -49,18 +49,24 @@ def cookie_kadai():
     user_last_time = ""
     cookie = ""
     dic = ""
+    # response = ""
 
 
-    dic = request.cookies.get('cookies_value')
+    # dic = request.cookies.get('cookies_value')
     # dic = json.loads(cookie)
+    count = request.cookies.get('user_count')
+    user_last_time = request.cookies.get('last_time')
 
-    if dic == None:
-        count = ""
-        user_last_time = ""
 
-    else:
-        count = dic["user_count"]
-        user_last_time = dic["last_time"]
+
+
+    # if dic == None:
+    #     count = ""
+    #     user_last_time = ""
+
+    # else:
+    #     count = dic["user_count"]
+    #     user_last_time = dic["last_time"]
 
 
     # count = request.cookies.get('count')
@@ -68,7 +74,7 @@ def cookie_kadai():
     date_now = datetime.datetime.now()
     # date_now = date.strftime('%Y年%m月 %H:%M:%S')
 
-    if count == '':
+    if count is None:
         count = 1
     else:
         count = int(count) + 1
@@ -78,11 +84,11 @@ def cookie_kadai():
     user_date_time = "ここに現在時刻を表示する：{}".format(date_now)
 
     if user_last_time != "":
-        response_count = make_response(render_template('cookie_kadai.html', user_count=user_count, user_date_time=user_date_time, user_last_time=user_last_time))
+        response = make_response(render_template('cookie_kadai.html', user_count=user_count, user_date_time=user_date_time, user_last_time=user_last_time))
         # response_last_time = make_response(render_template('cookie_kadai.html', user_last_time=user_last_time))
     
     else:
-        response_count = make_response(render_template('cookie_kadai.html', user_count=user_count, user_date_time=user_date_time))
+        response = make_response(render_template('cookie_kadai.html', user_count=user_count, user_date_time=user_date_time))
 
 
 
@@ -91,9 +97,14 @@ def cookie_kadai():
     # 前回訪れた時間を保存しておく
     user_last_time = "前回訪れた時間" + str(date_now)
 
-    aaa = ""
-    user_dic = {'user_count': str(count), 'last_time': user_last_time}
-    response_count.set_cookie('cookies_value', value=user_dic)
+    # user_dic = {'user_count': str(count), 'last_time': user_last_time}
+    # response_count.set_cookie('cookies_value', value=user_dic)
+    response.set_cookie('user_count', str(count))
+    response.set_cookie('last_time', user_last_time)
+
+    # return response_count
+    return response
+
     # response_count.set_cookie('cookies_value', value = json.dumps(user_dic))
     # response_count.set_cookie('count', str(count), 'last_time', user_last_time)
     # response_count.set_cookie('count', str(count))
@@ -120,4 +131,4 @@ def cookie_kadai():
     # return response_count, response_time
 
     # return response_count, response_time
-    return response_count
+    # return response_count
