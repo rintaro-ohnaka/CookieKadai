@@ -1,3 +1,7 @@
+# coding:utf-8
+
+# コメントにはなぜこの実装をしたのかを書いていく
+
 from flask import Flask
 app = Flask(__name__)
 from flask import render_template
@@ -163,3 +167,67 @@ def cookie_kadai():
 
     # return response_count, response_time
     # return response_count
+
+
+# セッションサンプル
+
+from flask import session
+app.secret_key = 'hogehoge'
+
+@app.route('/session', methods=["GET", "POST"])
+def sample_session():
+
+    count = session.get('count')
+    user_last_time = session.get('last_time')
+
+
+    date_now = datetime.datetime.now()
+
+    if count is None:
+        count = 1
+    else:
+        count = int(count) + 1
+
+    user_date_time = "ここに現在時刻を表示する：{}".format(date_now)
+
+    if "session_delete" in request.form.keys():
+        count = 1
+        date_now = None
+        user_last_time = "前回訪れた時間をここに表示する：" + str(date_now)
+    else:
+        bb = ""
+
+
+    user_count = "{}回目の訪問です".format(count)
+
+    if user_last_time != "":
+        params = {
+        "user_date_time" : user_date_time,
+        "user_count" : user_count,
+        "user_last_time" : user_last_time
+        }
+    else:
+        params = {
+        "user_date_time" : user_date_time,
+        "user_count" : user_count
+        }
+
+    
+    user_last_time = "前回訪れた時間をここに表示する：" + str(date_now)
+
+    # sessionの中にcountの数値を代入している
+    session["count"] = count
+    session["last_time"] = user_last_time
+
+    # params = {
+    # "user_date_time" : user_date_time,
+    # "user_count" : user_count,
+    # "user_last_time" : user_last_time
+    # }
+    # return "{}回目の訪問です".format(count)
+    return render_template("session_kadai.html", **params)
+    # return render_template("session_kadai.html", user_count=user_count, user_date_time=user_date_time)
+
+    # render_templatesでhtmlには遷移できるっぽい
+    # ということは、params的な感じで、値を飛ばすこともできるのかな？
+    # html, 変数名=変数名でもいけそうだけどね
